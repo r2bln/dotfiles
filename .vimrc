@@ -28,10 +28,10 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
-Plugin 'file:///home/gmarik/path/to/plugin'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
+Plugin 'preservim/nerdtree'
 
 " Themes
 Plugin 'sjl/badwolf'
@@ -43,6 +43,7 @@ call vundle#end()            " required
 
 filetype plugin indent on    " required
 color badwolf
+" autocmd vimenter * ++nested colorscheme gruvbox
 syntax on
 
 " Keyboard " {{{
