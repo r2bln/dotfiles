@@ -93,11 +93,22 @@ jsonls, yamlls) и `tree-sitter-cli` (таргет `tools`).
 lazy-спек (`return { "author/repo", opts = {...} }`). Перезапустить nvim
 или `:Lazy sync` — поставится само.
 
-### Языки с LSP из коробки (mason ensure_installed)
+### LSP серверы
 
-`lua_ls, pyright, ts_ls, bashls, clangd, rust_analyzer, gopls, jsonls,
-yamlls, marksman`. Добавить сервер — дописать в список внутри
-`lua/plugins/lsp.lua`.
+LSP серверы **не ставятся автоматически** — `ensure_installed` намеренно
+убран, чтобы не класть машину при первом запуске (9 серверов + компиляция
+treesitter-парсеров одновременно = 2+ ГБ RAM и полная загрузка CPU на
+несколько минут, на слабых машинах — swap и зависание).
+
+Ставить по одному по мере надобности через `:MasonInstall <server>`:
+
+```
+:MasonInstall lua_ls pyright bashls
+```
+
+Список доступных: `:Mason`. Добавить сервер и настроить его — в
+`lua/plugins/lsp.lua` (блок `vim.lsp.config`), автовключение через
+`automatic_enable = true` уже работает.
 
 ### Клавиши
 

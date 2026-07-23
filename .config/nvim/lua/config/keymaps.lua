@@ -30,5 +30,6 @@ map("t", "<C-l>", [[<C-\><C-n><C-w>l]], { desc = "Window right" })
 
 -- Обычный системный терминал (отдельный от Claude Code), снизу
 map("n", "<leader>tt", function()
+	if not Snacks then return end
 	Snacks.terminal.toggle(nil, { win = { position = "bottom", height = 0.3 } })
 end, { desc = "Toggle system terminal" })
