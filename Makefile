@@ -1,6 +1,7 @@
 DOTFILES_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 OS_ID := $(shell sh -c '. /etc/os-release 2>/dev/null; echo "$$ID $$ID_LIKE"' | tr '[:upper:]' '[:lower:]')
 SUDO := $(shell [ "$$(id -u)" = "0" ] && echo "" || echo "sudo")
+export PATH := $(HOME)/.local/bin:$(PATH)
 
 NVIM_MIN_VERSION := 0.12.0
 NVIM_INSTALL_DIR := $(HOME)/.local/opt/nvim
