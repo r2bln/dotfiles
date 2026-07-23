@@ -1,5 +1,6 @@
 DOTFILES_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 OS_ID := $(shell sh -c '. /etc/os-release 2>/dev/null; echo "$$ID $$ID_LIKE"' | tr '[:upper:]' '[:lower:]')
+SUDO := $(shell [ "$$(id -u)" = "0" ] && echo "" || echo "sudo")
 
 NVIM_MIN_VERSION := 0.12.0
 NVIM_INSTALL_DIR := $(HOME)/.local/opt/nvim
@@ -16,12 +17,12 @@ FONT_DIR := $(HOME)/.local/share/fonts/$(FONT_NAME)NerdFont
 
 ifneq (,$(findstring arch,$(OS_ID)))
 	DISTRO := arch
-	PKG_INSTALL := sudo pacman -S --needed --noconfirm
+	PKG_INSTALL := $(SUDO) pacman -S --needed --noconfirm
 	PACKAGES := git tmux btop neovim base-devel ripgrep fd unzip curl xclip fontconfig
 else ifneq (,$(findstring debian,$(OS_ID)))
 	DISTRO := debian
-	PKG_INSTALL := sudo apt-get update && sudo apt-get install -y
-	PACKAGES := git tmux btop build-essential ripgrep fd-find unzip curl xclip fontconfig
+	PKG_INSTALL := $(SUDO) apt-get update && $(SUDO) apt-get install -y
+	PACKAGES := git tmux btop build-essential ripgrep fd-find unzip curl xclip fontconfig xz-utils
 else
 	$(error Неизвестный дистрибутив ($(OS_ID)). Допиши PACKAGES/PKG_INSTALL в Makefile)
 endif
