@@ -22,7 +22,6 @@ local ensure_installed = {
 	"dockerfile",
 	"regex",
 	"diff",
-	"gitcommit",
 }
 
 return {

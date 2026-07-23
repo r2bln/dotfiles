@@ -33,6 +33,13 @@ make install
 
 Таргеты идемпотентны, `make install` можно перезапускать безопасно.
 
+> **Debian/Ubuntu с малым объёмом RAM:** `make install` и первый запуск nvim
+> компилируют treesitter-парсеры через gcc. Если RAM < ~2 ГБ без свопа — OOM
+> killer убьёт компилятор (`cc1 Killed`). Перед запуском добавь своп:
+> ```bash
+> fallocate -l 1G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile
+> ```
+
 Пакеты (`packages`):
 - Arch: `git tmux btop neovim base-devel ripgrep fd unzip curl xclip fontconfig`
 - Debian: `git tmux btop build-essential ripgrep fd-find unzip curl xclip fontconfig` (`neovim` сюда не входит — им занимается таргет `nvim`, см. выше)
