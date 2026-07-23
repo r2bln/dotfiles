@@ -14,3 +14,5 @@ map("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
 
 map("n", "<leader>w", "<cmd>w<CR>", { desc = "Save file" })
 map("n", "<leader>q", "<cmd>q<CR>", { desc = "Quit" })
+
+map("v", "<C-y>", '"+y', { desc = "Yank selection to system clipboard" })
