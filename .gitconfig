@@ -1,0 +1,7 @@
+[user]
+	email = kulikovis91@mail.ru
+	name = Ivan Kulikov
+[core]
+	editor = nvim
+[init]
+	defaultBranch = main
