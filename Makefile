@@ -123,4 +123,4 @@ shell-env:
 	grep -qxF 'alias sudo='"'"'sudo '"'"'' "$(HOME)/.bashrc" || echo 'alias sudo='"'"'sudo '"'"'' >> "$(HOME)/.bashrc"
 
 plugins:
-	nvim --headless "+Lazy! sync" +qa
+	bash -c '. "$(NVM_DIR)/nvm.sh" && nvim --headless "+Lazy! sync" +qa'
