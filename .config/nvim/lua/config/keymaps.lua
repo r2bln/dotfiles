@@ -16,3 +16,14 @@ map("n", "<leader>w", "<cmd>w<CR>", { desc = "Save file" })
 map("n", "<leader>q", "<cmd>q<CR>", { desc = "Quit" })
 
 map("v", "<C-y>", '"+y', { desc = "Yank selection to system clipboard" })
+
+-- Ctrl-hjkl window navigation (works from normal mode and from inside terminals like Claude Code)
+map("n", "<C-h>", "<C-w>h", { desc = "Window left" })
+map("n", "<C-j>", "<C-w>j", { desc = "Window down" })
+map("n", "<C-k>", "<C-w>k", { desc = "Window up" })
+map("n", "<C-l>", "<C-w>l", { desc = "Window right" })
+
+map("t", "<C-h>", [[<C-\><C-n><C-w>h]], { desc = "Window left" })
+map("t", "<C-j>", [[<C-\><C-n><C-w>j]], { desc = "Window down" })
+map("t", "<C-k>", [[<C-\><C-n><C-w>k]], { desc = "Window up" })
+map("t", "<C-l>", [[<C-\><C-n><C-w>l]], { desc = "Window right" })
