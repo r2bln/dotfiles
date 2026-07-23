@@ -26,6 +26,7 @@ make install
 | `fd-shim`   | на Debian `fd-find` ставит бинарник как `fdfind` — линкуем его как `fd` в `~/.local/bin`, чтобы находила telescope. На Arch — no-op |
 | `node`      | ставит [nvm](https://github.com/nvm-sh/nvm) в `~/.nvm` (если ещё нет) и `nvm install stable` + `nvm alias default stable` |
 | `tools`     | `npm install -g tree-sitter-cli` через node из nvm (без sudo) — нужен для компиляции парсеров nvim-treesitter |
+| `fonts`     | скачивает `JetBrainsMono Nerd Font` с GitHub releases в `~/.local/share/fonts/JetBrainsMonoNerdFont` и обновляет кеш шрифтов (`fc-cache`) |
 | `link`      | симлинкает файлы из репо в `$HOME`, существующий файл/симлинк с другим содержимым бэкапится в `<файл>.bak` |
 | `shell-env` | добавляет в `~/.bashrc` (если ещё нет) `~/.local/bin` в `PATH`, `EDITOR`/`VISUAL=nvim`, алиас `e='$EDITOR'` и `sudo='sudo '` (пробел в конце — чтобы `sudo` тоже разворачивал алиасы следующего слова, иначе `sudo e file` падает с «команда не найдена») |
 | `plugins`   | ставит плагины Neovim (`nvim --headless "+Lazy! sync" +qa`) |
@@ -33,16 +34,23 @@ make install
 Таргеты идемпотентны, `make install` можно перезапускать безопасно.
 
 Пакеты (`packages`):
-- Arch: `git tmux btop neovim base-devel ripgrep fd unzip curl`
-- Debian: `git tmux btop build-essential ripgrep fd-find unzip curl` (`neovim` сюда не входит — им занимается таргет `nvim`, см. выше)
+- Arch: `git tmux btop neovim base-devel ripgrep fd unzip curl xclip fontconfig`
+- Debian: `git tmux btop build-essential ripgrep fd-find unzip curl xclip fontconfig` (`neovim` сюда не входит — им занимается таргет `nvim`, см. выше)
 
 `base-devel`/`build-essential` нужны, чтобы компилировались парсеры
-treesitter и `telescope-fzf-native`; `ripgrep`/`fd` — для telescope.
+treesitter и `telescope-fzf-native`; `ripgrep`/`fd` — для telescope; `xclip`
+— чтобы `"+y`/`"+p` в nvim работали с системным буфером обмена;
+`fontconfig` — для `fc-cache` (таргет `fonts`).
 
 Node/npm — не из пакетного менеджера, а через `nvm` (таргет `node`):
 версия в apt/pacman либо старая, либо требует sudo для глобальных
 npm-пакетов. Через npm из nvm ставятся часть LSP-серверов (ts_ls, bashls,
 jsonls, yamlls) и `tree-sitter-cli` (таргет `tools`).
+
+Шрифт `JetBrainsMono Nerd Font` (таргет `fonts`) нужен, чтобы иконки из
+`nvim-web-devicons` (nvim-tree, lualine) отображались нормально, а не
+квадратами — сам он не настраивает шрифт терминала, это нужно выбрать в
+настройках эмулятора терминала руками.
 
 Почему Neovim с apt не годится напрямую: nvim-treesitter (ветка `main`)
 требует Neovim ≥ 0.12, а в репозиториях Debian обычно версия сильно

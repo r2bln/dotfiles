@@ -9,23 +9,28 @@ NVM_DIR := $(HOME)/.nvm
 NVM_VERSION := v0.40.4
 NVM_INSTALL_URL := https://raw.githubusercontent.com/nvm-sh/nvm/$(NVM_VERSION)/install.sh
 
+FONT_NAME := JetBrainsMono
+FONT_VERSION := v3.4.0
+FONT_URL := https://github.com/ryanoasis/nerd-fonts/releases/download/$(FONT_VERSION)/$(FONT_NAME).tar.xz
+FONT_DIR := $(HOME)/.local/share/fonts/$(FONT_NAME)NerdFont
+
 ifneq (,$(findstring arch,$(OS_ID)))
 	DISTRO := arch
 	PKG_INSTALL := sudo pacman -S --needed --noconfirm
-	PACKAGES := git tmux btop neovim base-devel ripgrep fd unzip curl
+	PACKAGES := git tmux btop neovim base-devel ripgrep fd unzip curl xclip fontconfig
 else ifneq (,$(findstring debian,$(OS_ID)))
 	DISTRO := debian
 	PKG_INSTALL := sudo apt-get update && sudo apt-get install -y
-	PACKAGES := git tmux btop build-essential ripgrep fd-find unzip curl
+	PACKAGES := git tmux btop build-essential ripgrep fd-find unzip curl xclip fontconfig
 else
 	$(error Неизвестный дистрибутив ($(OS_ID)). Допиши PACKAGES/PKG_INSTALL в Makefile)
 endif
 
 LINKS := .vimrc:.vimrc .config/nvim:.config/nvim .gitconfig:.gitconfig
 
-.PHONY: install packages nvim fd-shim node tools link shell-env plugins
+.PHONY: install packages nvim fd-shim node tools fonts link shell-env plugins
 
-install: packages nvim fd-shim node tools link shell-env plugins
+install: packages nvim fd-shim node tools fonts link shell-env plugins
 
 packages:
 	$(PKG_INSTALL) $(PACKAGES)
@@ -76,6 +81,20 @@ node:
 # npm из nvm (без sudo — глобальные пакеты ставятся в $(NVM_DIR)).
 tools:
 	@bash -c '. "$(NVM_DIR)/nvm.sh" && nvm use stable && npm install -g tree-sitter-cli'
+
+# nvim-web-devicons (nvim-tree, lualine) рисует иконки глифами из Nerd Font;
+# без патченного шрифта в терминале они превращаются в квадраты/тофу.
+fonts:
+	@if ls "$(FONT_DIR)"/*.ttf >/dev/null 2>&1; then \
+		echo "$(FONT_NAME) Nerd Font уже стоит"; \
+	else \
+		echo "ставлю $(FONT_NAME) Nerd Font $(FONT_VERSION)"; \
+		mkdir -p "$(FONT_DIR)"; \
+		curl -fsSL "$(FONT_URL)" -o /tmp/nerdfont-dotfiles.tar.xz; \
+		tar -xJf /tmp/nerdfont-dotfiles.tar.xz -C "$(FONT_DIR)"; \
+		rm -f /tmp/nerdfont-dotfiles.tar.xz; \
+		fc-cache -f "$(FONT_DIR)" >/dev/null; \
+	fi
 
 link:
 	@for pair in $(LINKS); do \
