@@ -5,23 +5,27 @@ NVIM_MIN_VERSION := 0.12.0
 NVIM_INSTALL_DIR := $(HOME)/.local/opt/nvim
 NVIM_TARBALL_URL := https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
 
+NVM_DIR := $(HOME)/.nvm
+NVM_VERSION := v0.40.4
+NVM_INSTALL_URL := https://raw.githubusercontent.com/nvm-sh/nvm/$(NVM_VERSION)/install.sh
+
 ifneq (,$(findstring arch,$(OS_ID)))
 	DISTRO := arch
 	PKG_INSTALL := sudo pacman -S --needed --noconfirm
-	PACKAGES := git tmux btop neovim base-devel ripgrep fd unzip nodejs npm curl
+	PACKAGES := git tmux btop neovim base-devel ripgrep fd unzip curl
 else ifneq (,$(findstring debian,$(OS_ID)))
 	DISTRO := debian
 	PKG_INSTALL := sudo apt-get update && sudo apt-get install -y
-	PACKAGES := git tmux btop build-essential ripgrep fd-find unzip nodejs npm curl
+	PACKAGES := git tmux btop build-essential ripgrep fd-find unzip curl
 else
 	$(error Неизвестный дистрибутив ($(OS_ID)). Допиши PACKAGES/PKG_INSTALL в Makefile)
 endif
 
 LINKS := .vimrc:.vimrc .config/nvim:.config/nvim .gitconfig:.gitconfig
 
-.PHONY: install packages nvim fd-shim tools link shell-env plugins
+.PHONY: install packages nvim fd-shim node tools link shell-env plugins
 
-install: packages nvim fd-shim tools link shell-env plugins
+install: packages nvim fd-shim node tools link shell-env plugins
 
 packages:
 	$(PKG_INSTALL) $(PACKAGES)
@@ -58,10 +62,20 @@ else
 	@true
 endif
 
-# tree-sitter-cli нужен для компиляции парсеров nvim-treesitter; ставим единообразно
-# через npm на всех дистрибутивах, а не через пакетный менеджер.
+# node/npm ставим через nvm, а не пакетным менеджером: в apt/pacman версии
+# либо старые, либо требуют sudo для глобальных npm-пакетов. nvm сам держит
+# node в $(HOME) и добавляет свой блок инициализации в ~/.bashrc.
+node:
+	@if [ ! -s "$(NVM_DIR)/nvm.sh" ]; then \
+		echo "ставлю nvm $(NVM_VERSION)"; \
+		curl -fsSL "$(NVM_INSTALL_URL)" | bash; \
+	fi
+	@bash -c '. "$(NVM_DIR)/nvm.sh" && nvm install stable && nvm alias default stable'
+
+# tree-sitter-cli нужен для компиляции парсеров nvim-treesitter; ставим через
+# npm из nvm (без sudo — глобальные пакеты ставятся в $(NVM_DIR)).
 tools:
-	sudo npm install -g tree-sitter-cli
+	@bash -c '. "$(NVM_DIR)/nvm.sh" && nvm use stable && npm install -g tree-sitter-cli'
 
 link:
 	@for pair in $(LINKS); do \

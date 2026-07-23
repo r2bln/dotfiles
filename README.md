@@ -24,7 +24,8 @@ make install
 | `packages`  | ставит пакеты через `pacman`/`apt` (список см. ниже, разный на Arch/Debian) |
 | `nvim`      | на Debian: если `nvim` из apt старше `0.12.0` (или его нет) — скачивает свежий релиз с GitHub в `~/.local/opt/nvim` и линкует в `~/.local/bin/nvim`. На Arch — no-op, пакет и так свежий (rolling) |
 | `fd-shim`   | на Debian `fd-find` ставит бинарник как `fdfind` — линкуем его как `fd` в `~/.local/bin`, чтобы находила telescope. На Arch — no-op |
-| `tools`     | `sudo npm install -g tree-sitter-cli` — одинаково на всех дистрибутивах, нужен для компиляции парсеров nvim-treesitter |
+| `node`      | ставит [nvm](https://github.com/nvm-sh/nvm) в `~/.nvm` (если ещё нет) и `nvm install stable` + `nvm alias default stable` |
+| `tools`     | `npm install -g tree-sitter-cli` через node из nvm (без sudo) — нужен для компиляции парсеров nvim-treesitter |
 | `link`      | симлинкает файлы из репо в `$HOME`, существующий файл/симлинк с другим содержимым бэкапится в `<файл>.bak` |
 | `shell-env` | добавляет в `~/.bashrc` (если ещё нет) `~/.local/bin` в `PATH`, `EDITOR`/`VISUAL=nvim` и алиас `e='$EDITOR'` |
 | `plugins`   | ставит плагины Neovim (`nvim --headless "+Lazy! sync" +qa`) |
@@ -32,13 +33,16 @@ make install
 Таргеты идемпотентны, `make install` можно перезапускать безопасно.
 
 Пакеты (`packages`):
-- Arch: `git tmux btop neovim base-devel ripgrep fd unzip nodejs npm curl`
-- Debian: `git tmux btop build-essential ripgrep fd-find unzip nodejs npm curl` (`neovim` сюда не входит — им занимается таргет `nvim`, см. выше)
+- Arch: `git tmux btop neovim base-devel ripgrep fd unzip curl`
+- Debian: `git tmux btop build-essential ripgrep fd-find unzip curl` (`neovim` сюда не входит — им занимается таргет `nvim`, см. выше)
 
 `base-devel`/`build-essential` нужны, чтобы компилировались парсеры
-treesitter и `telescope-fzf-native`; `ripgrep`/`fd` — для telescope;
-`nodejs`/`npm` — часть LSP-серверов (ts_ls, bashls, jsonls, yamlls)
-ставится через них, плюс через npm же ставится `tree-sitter-cli`.
+treesitter и `telescope-fzf-native`; `ripgrep`/`fd` — для telescope.
+
+Node/npm — не из пакетного менеджера, а через `nvm` (таргет `node`):
+версия в apt/pacman либо старая, либо требует sudo для глобальных
+npm-пакетов. Через npm из nvm ставятся часть LSP-серверов (ts_ls, bashls,
+jsonls, yamlls) и `tree-sitter-cli` (таргет `tools`).
 
 Почему Neovim с apt не годится напрямую: nvim-treesitter (ветка `main`)
 требует Neovim ≥ 0.12, а в репозиториях Debian обычно версия сильно
