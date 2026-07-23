@@ -12,21 +12,38 @@ cd ~/sources/dotfiles
 make install
 ```
 
+Поддерживаются **Arch** (`pacman`) и **Debian/Ubuntu** (`apt`) — дистрибутив
+определяется автоматически по `/etc/os-release` (`ID`/`ID_LIKE`). Для
+других дистрибутивов `make` упадёт с понятной ошибкой — надо дописать
+`PACKAGES`/`PKG_INSTALL` в `Makefile`.
+
 `make install` делает по порядку:
 
-| Таргет     | Что делает |
-|------------|------------|
-| `packages` | ставит пакеты через `pacman` (см. список ниже) |
-| `link`     | симлинкает файлы из репо в `$HOME`, существующий файл/симлинк с другим содержимым бэкапится в `<файл>.bak` |
-| `editor`   | добавляет `export EDITOR=nvim` / `VISUAL=nvim` в `~/.bashrc`, если их там ещё нет |
-| `plugins`  | ставит плагины Neovim (`nvim --headless "+Lazy! sync" +qa`) |
+| Таргет      | Что делает |
+|-------------|------------|
+| `packages`  | ставит пакеты через `pacman`/`apt` (список см. ниже, разный на Arch/Debian) |
+| `nvim`      | на Debian: если `nvim` из apt старше `0.12.0` (или его нет) — скачивает свежий релиз с GitHub в `~/.local/opt/nvim` и линкует в `~/.local/bin/nvim`. На Arch — no-op, пакет и так свежий (rolling) |
+| `fd-shim`   | на Debian `fd-find` ставит бинарник как `fdfind` — линкуем его как `fd` в `~/.local/bin`, чтобы находила telescope. На Arch — no-op |
+| `tools`     | `sudo npm install -g tree-sitter-cli` — одинаково на всех дистрибутивах, нужен для компиляции парсеров nvim-treesitter |
+| `link`      | симлинкает файлы из репо в `$HOME`, существующий файл/симлинк с другим содержимым бэкапится в `<файл>.bak` |
+| `shell-env` | добавляет в `~/.bashrc` (если ещё нет) `~/.local/bin` в `PATH` и `EDITOR`/`VISUAL=nvim` |
+| `plugins`   | ставит плагины Neovim (`nvim --headless "+Lazy! sync" +qa`) |
 
 Таргеты идемпотентны, `make install` можно перезапускать безопасно.
-Пакеты (`packages`): `git tmux btop neovim base-devel tree-sitter-cli
-ripgrep fd unzip nodejs npm curl`. `base-devel`/`tree-sitter-cli` нужны,
-чтобы компилировались парсеры treesitter и `telescope-fzf-native`;
-`ripgrep`/`fd` — для telescope; `nodejs`/`npm` — часть LSP-серверов
-(ts_ls, bashls, jsonls, yamlls) ставится через них.
+
+Пакеты (`packages`):
+- Arch: `git tmux btop neovim base-devel ripgrep fd unzip nodejs npm curl`
+- Debian: `git tmux btop build-essential ripgrep fd-find unzip nodejs npm curl` (`neovim` сюда не входит — им занимается таргет `nvim`, см. выше)
+
+`base-devel`/`build-essential` нужны, чтобы компилировались парсеры
+treesitter и `telescope-fzf-native`; `ripgrep`/`fd` — для telescope;
+`nodejs`/`npm` — часть LSP-серверов (ts_ls, bashls, jsonls, yamlls)
+ставится через них, плюс через npm же ставится `tree-sitter-cli`.
+
+Почему Neovim с apt не годится напрямую: nvim-treesitter (ветка `main`)
+требует Neovim ≥ 0.12, а в репозиториях Debian обычно версия сильно
+старее. Поэтому на Debian `make nvim` сам подменяет источник на
+официальный tarball с GitHub releases, если версия из apt не подходит.
 
 ## .gitconfig
 
