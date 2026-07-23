@@ -15,18 +15,6 @@ return {
 			})
 
 			require("mason-lspconfig").setup({
-				ensure_installed = {
-					"lua_ls",
-					"pyright",
-					"ts_ls",
-					"bashls",
-					"clangd",
-					"rust_analyzer",
-					"gopls",
-					"jsonls",
-					"yamlls",
-					"marksman",
-				},
 				automatic_enable = true,
 			})
 
