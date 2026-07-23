@@ -35,3 +35,23 @@ opt.updatetime = 250
 opt.timeoutlen = 400
 
 opt.listchars = { eol = "¬", tab = ">·", trail = "␣", extends = ">", precedes = "<" }
+
+-- Подсветка активного тайла: текст в неактивных сплитах гасим, границу делаем ярче,
+-- courserline оставляем только в текущем окне
+vim.api.nvim_create_autocmd("ColorScheme", {
+	callback = function()
+		vim.api.nvim_set_hl(0, "NormalNC", { fg = "#665c54" })
+		vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#fe8019", bold = true })
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+	callback = function()
+		vim.wo.cursorline = true
+	end,
+})
+vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+	callback = function()
+		vim.wo.cursorline = false
+	end,
+})
