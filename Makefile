@@ -84,6 +84,7 @@ shell-env:
 	grep -qxF 'export PATH="$$HOME/.local/bin:$$PATH"' "$(HOME)/.bashrc" || echo 'export PATH="$$HOME/.local/bin:$$PATH"' >> "$(HOME)/.bashrc"
 	grep -qxF 'export EDITOR=nvim' "$(HOME)/.bashrc" || echo 'export EDITOR=nvim' >> "$(HOME)/.bashrc"
 	grep -qxF 'export VISUAL=nvim' "$(HOME)/.bashrc" || echo 'export VISUAL=nvim' >> "$(HOME)/.bashrc"
+	grep -qxF 'alias e='"'"'$$EDITOR'"'"'' "$(HOME)/.bashrc" || echo 'alias e='"'"'$$EDITOR'"'"'' >> "$(HOME)/.bashrc"
 
 plugins:
 	nvim --headless "+Lazy! sync" +qa

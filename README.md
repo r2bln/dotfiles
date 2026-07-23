@@ -26,7 +26,7 @@ make install
 | `fd-shim`   | на Debian `fd-find` ставит бинарник как `fdfind` — линкуем его как `fd` в `~/.local/bin`, чтобы находила telescope. На Arch — no-op |
 | `tools`     | `sudo npm install -g tree-sitter-cli` — одинаково на всех дистрибутивах, нужен для компиляции парсеров nvim-treesitter |
 | `link`      | симлинкает файлы из репо в `$HOME`, существующий файл/симлинк с другим содержимым бэкапится в `<файл>.bak` |
-| `shell-env` | добавляет в `~/.bashrc` (если ещё нет) `~/.local/bin` в `PATH` и `EDITOR`/`VISUAL=nvim` |
+| `shell-env` | добавляет в `~/.bashrc` (если ещё нет) `~/.local/bin` в `PATH`, `EDITOR`/`VISUAL=nvim` и алиас `e='$EDITOR'` |
 | `plugins`   | ставит плагины Neovim (`nvim --headless "+Lazy! sync" +qa`) |
 
 Таргеты идемпотентны, `make install` можно перезапускать безопасно.
