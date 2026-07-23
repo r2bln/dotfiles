@@ -27,7 +27,7 @@ make install
 | `node`      | ставит [nvm](https://github.com/nvm-sh/nvm) в `~/.nvm` (если ещё нет) и `nvm install stable` + `nvm alias default stable` |
 | `tools`     | `npm install -g tree-sitter-cli` через node из nvm (без sudo) — нужен для компиляции парсеров nvim-treesitter |
 | `link`      | симлинкает файлы из репо в `$HOME`, существующий файл/симлинк с другим содержимым бэкапится в `<файл>.bak` |
-| `shell-env` | добавляет в `~/.bashrc` (если ещё нет) `~/.local/bin` в `PATH`, `EDITOR`/`VISUAL=nvim` и алиас `e='$EDITOR'` |
+| `shell-env` | добавляет в `~/.bashrc` (если ещё нет) `~/.local/bin` в `PATH`, `EDITOR`/`VISUAL=nvim`, алиас `e='$EDITOR'` и `sudo='sudo '` (пробел в конце — чтобы `sudo` тоже разворачивал алиасы следующего слова, иначе `sudo e file` падает с «команда не найдена») |
 | `plugins`   | ставит плагины Neovim (`nvim --headless "+Lazy! sync" +qa`) |
 
 Таргеты идемпотентны, `make install` можно перезапускать безопасно.

@@ -99,6 +99,7 @@ shell-env:
 	grep -qxF 'export EDITOR=nvim' "$(HOME)/.bashrc" || echo 'export EDITOR=nvim' >> "$(HOME)/.bashrc"
 	grep -qxF 'export VISUAL=nvim' "$(HOME)/.bashrc" || echo 'export VISUAL=nvim' >> "$(HOME)/.bashrc"
 	grep -qxF 'alias e='"'"'$$EDITOR'"'"'' "$(HOME)/.bashrc" || echo 'alias e='"'"'$$EDITOR'"'"'' >> "$(HOME)/.bashrc"
+	grep -qxF 'alias sudo='"'"'sudo '"'"'' "$(HOME)/.bashrc" || echo 'alias sudo='"'"'sudo '"'"'' >> "$(HOME)/.bashrc"
 
 plugins:
 	nvim --headless "+Lazy! sync" +qa
