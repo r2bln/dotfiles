@@ -41,8 +41,8 @@ make install
 > ```
 
 Пакеты (`packages`):
-- Arch: `git tmux btop neovim base-devel ripgrep fd unzip curl xclip fontconfig`
-- Debian: `git tmux btop build-essential ripgrep fd-find unzip curl xclip fontconfig` (`neovim` сюда не входит — им занимается таргет `nvim`, см. выше)
+- Arch: `git tmux btop neovim base-devel ripgrep fd unzip curl xclip fontconfig kitty`
+- Debian: `git tmux btop build-essential ripgrep fd-find unzip curl xclip fontconfig xz-utils kitty` (`neovim` сюда не входит — им занимается таргет `nvim`, см. выше)
 
 `base-devel`/`build-essential` нужны, чтобы компилировались парсеры
 treesitter и `telescope-fzf-native`; `ripgrep`/`fd` — для telescope; `xclip`
@@ -69,6 +69,12 @@ jsonls, yamlls) и `tree-sitter-cli` (таргет `tools`).
 Трекается целиком (`user.email`, `user.name`, `core.editor = nvim`,
 `init.defaultBranch = main`). Меняется прямо в репо, а не через
 `git config --global`.
+
+## kitty
+
+`.config/kitty/kitty.conf` — приближает внешний вид/поведение kitty к
+дефолтному профилю GNOME Terminal (шрифт JetBrainsMono Nerd Font 14pt,
+чёрный фон, Tango-палитра, вкладки сверху без powerline).
 
 ## Neovim
 

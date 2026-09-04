@@ -19,16 +19,16 @@ FONT_DIR := $(HOME)/.local/share/fonts/$(FONT_NAME)NerdFont
 ifneq (,$(findstring arch,$(OS_ID)))
 	DISTRO := arch
 	PKG_INSTALL := $(SUDO) pacman -S --needed --noconfirm
-	PACKAGES := git tmux btop neovim base-devel ripgrep fd unzip curl xclip fontconfig
+	PACKAGES := git tmux btop neovim base-devel ripgrep fd unzip curl xclip fontconfig kitty
 else ifneq (,$(findstring debian,$(OS_ID)))
 	DISTRO := debian
 	PKG_INSTALL := $(SUDO) apt-get update && $(SUDO) apt-get install -y
-	PACKAGES := git tmux btop build-essential ripgrep fd-find unzip curl xclip fontconfig xz-utils
+	PACKAGES := git tmux btop build-essential ripgrep fd-find unzip curl xclip fontconfig xz-utils kitty
 else
 	$(error Неизвестный дистрибутив ($(OS_ID)). Допиши PACKAGES/PKG_INSTALL в Makefile)
 endif
 
-LINKS := .vimrc:.vimrc .config/nvim:.config/nvim .gitconfig:.gitconfig
+LINKS := .vimrc:.vimrc .config/nvim:.config/nvim .config/kitty:.config/kitty .gitconfig:.gitconfig
 
 .PHONY: install packages nvim fd-shim node tools fonts link shell-env plugins
 
