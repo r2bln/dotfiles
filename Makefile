@@ -121,6 +121,13 @@ shell-env:
 	grep -qxF 'export VISUAL=nvim' "$(HOME)/.bashrc" || echo 'export VISUAL=nvim' >> "$(HOME)/.bashrc"
 	grep -qxF 'alias e='"'"'$$EDITOR'"'"'' "$(HOME)/.bashrc" || echo 'alias e='"'"'$$EDITOR'"'"'' >> "$(HOME)/.bashrc"
 	grep -qxF 'alias sudo='"'"'sudo '"'"'' "$(HOME)/.bashrc" || echo 'alias sudo='"'"'sudo '"'"'' >> "$(HOME)/.bashrc"
+	@# .bashrc охватывает только интерактивные bash-шеллы. Программы, запущенные
+	@# из GUI (лаунчер, systemd --user юниты) наследуют окружение из
+	@# systemd user environment, а не из .bashrc — поэтому дублируем EDITOR/VISUAL
+	@# туда же, чтобы "все команды, открывающие $$EDITOR" реально открывали nvim.
+	mkdir -p "$(HOME)/.config/environment.d"
+	printf 'EDITOR=nvim\nVISUAL=nvim\n' > "$(HOME)/.config/environment.d/dotfiles-editor.conf"
+	systemctl --user import-environment EDITOR VISUAL 2>/dev/null || true
 
 plugins:
 	bash -c '. "$(NVM_DIR)/nvm.sh" && nvim --headless "+Lazy! sync" +qa'

@@ -28,7 +28,7 @@ make install
 | `tools`     | `npm install -g tree-sitter-cli` через node из nvm (без sudo) — нужен для компиляции парсеров nvim-treesitter |
 | `fonts`     | скачивает `JetBrainsMono Nerd Font` с GitHub releases в `~/.local/share/fonts/JetBrainsMonoNerdFont` и обновляет кеш шрифтов (`fc-cache`) |
 | `link`      | симлинкает файлы из репо в `$HOME`, существующий файл/симлинк с другим содержимым бэкапится в `<файл>.bak` |
-| `shell-env` | добавляет в `~/.bashrc` (если ещё нет) `~/.local/bin` в `PATH`, `EDITOR`/`VISUAL=nvim`, алиас `e='$EDITOR'` и `sudo='sudo '` (пробел в конце — чтобы `sudo` тоже разворачивал алиасы следующего слова, иначе `sudo e file` падает с «команда не найдена») |
+| `shell-env` | добавляет в `~/.bashrc` (если ещё нет) `~/.local/bin` в `PATH`, `EDITOR`/`VISUAL=nvim`, алиас `e='$EDITOR'` и `sudo='sudo '` (пробел в конце — чтобы `sudo` тоже разворачивал алиасы следующего слова, иначе `sudo e file` падает с «команда не найдена»); также пишет `EDITOR`/`VISUAL=nvim` в `~/.config/environment.d/dotfiles-editor.conf`, чтобы их видели и программы, запущенные не из bash-шелла (GUI-лаунчер, systemd `--user` юниты) |
 | `plugins`   | ставит плагины Neovim (`nvim --headless "+Lazy! sync" +qa`) |
 
 Таргеты идемпотентны, `make install` можно перезапускать безопасно.
