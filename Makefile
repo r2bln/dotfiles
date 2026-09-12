@@ -119,15 +119,18 @@ shell-env:
 	grep -qxF 'export PATH="$$HOME/.local/bin:$$PATH"' "$(HOME)/.bashrc" || echo 'export PATH="$$HOME/.local/bin:$$PATH"' >> "$(HOME)/.bashrc"
 	grep -qxF 'export EDITOR=nvim' "$(HOME)/.bashrc" || echo 'export EDITOR=nvim' >> "$(HOME)/.bashrc"
 	grep -qxF 'export VISUAL=nvim' "$(HOME)/.bashrc" || echo 'export VISUAL=nvim' >> "$(HOME)/.bashrc"
+	grep -qxF 'export SYSTEMD_EDITOR=nvim' "$(HOME)/.bashrc" || echo 'export SYSTEMD_EDITOR=nvim' >> "$(HOME)/.bashrc"
 	grep -qxF 'alias e='"'"'$$EDITOR'"'"'' "$(HOME)/.bashrc" || echo 'alias e='"'"'$$EDITOR'"'"'' >> "$(HOME)/.bashrc"
 	grep -qxF 'alias sudo='"'"'sudo '"'"'' "$(HOME)/.bashrc" || echo 'alias sudo='"'"'sudo '"'"'' >> "$(HOME)/.bashrc"
 	@# .bashrc охватывает только интерактивные bash-шеллы. Программы, запущенные
 	@# из GUI (лаунчер, systemd --user юниты) наследуют окружение из
-	@# systemd user environment, а не из .bashrc — поэтому дублируем EDITOR/VISUAL
-	@# туда же, чтобы "все команды, открывающие $$EDITOR" реально открывали nvim.
+	@# systemd user environment, а не из .bashrc — поэтому дублируем EDITOR/VISUAL/
+	@# SYSTEMD_EDITOR туда же, чтобы "все команды, открывающие $$EDITOR" реально
+	@# открывали nvim. SYSTEMD_EDITOR нужен systemctl edit отдельно, т.к. он
+	@# проверяется systemd раньше EDITOR/VISUAL.
 	mkdir -p "$(HOME)/.config/environment.d"
-	printf 'EDITOR=nvim\nVISUAL=nvim\n' > "$(HOME)/.config/environment.d/dotfiles-editor.conf"
-	systemctl --user import-environment EDITOR VISUAL 2>/dev/null || true
+	printf 'EDITOR=nvim\nVISUAL=nvim\nSYSTEMD_EDITOR=nvim\n' > "$(HOME)/.config/environment.d/dotfiles-editor.conf"
+	systemctl --user import-environment EDITOR VISUAL SYSTEMD_EDITOR 2>/dev/null || true
 
 plugins:
 	bash -c '. "$(NVM_DIR)/nvm.sh" && nvim --headless "+Lazy! sync" +qa'
